@@ -1,0 +1,5 @@
+# Created at 2026-09-19T14:39:43.007
+Boot Manifest-JAR contains absolute paths in classpath 'D:\01-modelo-inicial\target\test-classes'
+Hint: <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
+'other' has different root
+
