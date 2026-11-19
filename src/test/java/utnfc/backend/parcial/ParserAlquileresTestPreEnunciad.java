@@ -9,7 +9,7 @@ import java.nio.file.Path;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ParserAlquileresTest {
+public class ParserAlquileresTestPreEnunciad {
 
     @TempDir
     Path tempDir;

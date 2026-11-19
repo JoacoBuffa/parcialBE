@@ -25,13 +25,10 @@ public class Garage {
                 Alquiler::getSucursal,
                 Collectors.summingDouble(Alquiler::importe)));
     }
-    public Long totalesAlquileresAbiertos() {
-        return alquileres.stream().count();
+    public Map<String, Long> conteoPorEstado() {
+        return alquileres.stream().collect(Collectors.groupingBy(
+                Alquiler::estado, Collectors.counting()));
     }
-
-  public Map<String, Long> alquileresPorEstado(){
-    return alquileres.stream().collect(Collectors.groupingBy(Alquiler::estado, Collectors.counting()));
-  }
 
     public List<Alquiler> todos() {
         return alquileres;

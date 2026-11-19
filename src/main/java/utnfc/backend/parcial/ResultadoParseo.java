@@ -4,19 +4,16 @@ import java.util.List;
 
 public final class ResultadoParseo {
     private final List<Alquiler> alquileres;
-    private final List<AlquilerCerrado> alquilerCerrados;
     private final int leidas;
     private final int descartadas;
     private final List<String> errores;
 
     public ResultadoParseo(
             List<Alquiler> alquileres,
-            List<AlquilerCerrado> alquilerCerrados,
             int leidas,
             int descartadas,
             List<String> errores) {
         this.alquileres = List.copyOf(alquileres);
-        this.alquilerCerrados = List.copyOf(alquilerCerrados);
         this.leidas = leidas;
         this.descartadas = descartadas;
         this.errores = List.copyOf(errores);
@@ -24,9 +21,6 @@ public final class ResultadoParseo {
 
     public List<Alquiler> getAlquileres() {
         return alquileres;
-    }
-    public List<AlquilerCerrado> getAlquileresCerrados() {
-        return alquilerCerrados;
     }
 
     public int getProcesadas() {

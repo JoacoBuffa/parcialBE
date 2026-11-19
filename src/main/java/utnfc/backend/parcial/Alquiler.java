@@ -8,9 +8,8 @@ public class Alquiler {
     private final int dias;
     private final double tarifaDiaria;
     private final int kmIncluidos;
-    private int kmFinal;
-    private int diasReales;
 
+    // Las invariantes comunes se validan UNA sola vez, aca.
     public Alquiler(String id, String cliente, String categoria, String sucursal,
                     int dias, double tarifaDiaria, int kmIncluidos) {
         this.id = textoObligatorio(id, "id");
@@ -24,41 +23,36 @@ public class Alquiler {
         this.tarifaDiaria = tarifaDiaria;
         this.kmIncluidos = kmIncluidos;
     }
-    public Alquiler(String id, String cliente, String categoria, String sucursal,
-                    int dias, double tarifaDiaria, int kmIncluidos, int kmFinal, int diasReales)
-    {
-        this(id, cliente, categoria, sucursal, dias, tarifaDiaria, kmIncluidos);
-        if(kmFinal < 0 || diasReales < 0)
-        {
-            throw new IllegalArgumentException("km finales y dias reales deben ser validos");
-        }
-        this.kmFinal = kmFinal;
-        this.diasReales = diasReales;
-    }
 
-
+    /**
+     * Unico punto de conversion texto -> objeto. Elige la subclase segun el estado.
+     * No decide nada sobre el ancho esperado por el encabezado (eso es del parser).
+     */
     public static Alquiler desdeCampos(String[] campos) {
         if (campos.length != 8 && campos.length != 10) {
             throw new IllegalArgumentException("cantidad de columnas incorrecta");
         }
-        if (!campos[7].equals("ABIERTO") && !campos[7].equals("CERRADO")) {
-            throw new IllegalArgumentException("el modelo del parcial solo admite ABIERTO o CERRADO");
-        }
-        if (campos.length ==8)
-        {
-            return new Alquiler(campos[0], campos[1], campos[2], campos[3],
-                    Integer.parseInt(campos[4]), Double.parseDouble(campos[5]),
-                    Integer.parseInt(campos[6]));
-        }
-        else
-        {
-            int campoKm = Integer.parseInt(campos[8]);
-            int campoDias= Integer.parseInt(campos[9]);
-            if (campoKm < 0 || campoDias < 0)
-            { throw new IllegalArgumentException("Cantidad de km reales o cantidad de dias invalido");}
-            return new AlquilerCerrado(campos[0], campos[1], campos[2], campos[3],
-                    Integer.parseInt(campos[4]), Double.parseDouble(campos[5]),
-                    Integer.parseInt(campos[6]), campoKm, campoDias);
+        String estado = campos[7];
+        switch (estado) {
+            case "ABIERTO":
+                if (campos.length == 10 && (!campos[8].isEmpty() || !campos[9].isEmpty())) {
+                    throw new IllegalArgumentException(
+                            "un alquiler abierto no puede tener datos de cierre");
+                }
+                return new Alquiler(campos[0], campos[1], campos[2], campos[3],
+                        Integer.parseInt(campos[4]), Double.parseDouble(campos[5]),
+                        Integer.parseInt(campos[6]));
+            case "CERRADO":
+                if (campos.length != 10) {
+                    throw new IllegalArgumentException(
+                            "un alquiler cerrado requiere kmFinal y diasReales");
+                }
+                return new AlquilerCerrado(campos[0], campos[1], campos[2], campos[3],
+                        Integer.parseInt(campos[4]), Double.parseDouble(campos[5]),
+                        Integer.parseInt(campos[6]),
+                        Integer.parseInt(campos[8]), Integer.parseInt(campos[9]));
+            default:
+                throw new IllegalArgumentException("estado desconocido: " + estado);
         }
     }
 
@@ -94,8 +88,6 @@ public class Alquiler {
         return dias;
     }
 
-    public int getDiasReales() {return diasReales;}
-    public int getKmFinal(){return kmFinal;}
     public double getTarifaDiaria() {
         return tarifaDiaria;
     }

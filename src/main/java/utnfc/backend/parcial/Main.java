@@ -12,6 +12,7 @@ public class Main {
                 ruta, resultado.getLeidas(), resultado.getAlquileres().size(),
                 resultado.getDescartadas(), resultado.getInvalidas());
         System.out.printf("Total: %.2f%nTotales por sucursal: %s%n", garage.total(), garage.totalesPorSucursal());
+        System.out.printf("Conteo por estado: %s%n", garage.conteoPorEstado());
         if (!resultado.getErrores().isEmpty()) {
             System.out.println("Errores: " + resultado.getErrores());
         }
